@@ -21,16 +21,37 @@ st.markdown("Upload your CSV to **Create** or **Update** Jira tasks automaticall
 
 # --- Sidebar: Configuration ---
 with st.sidebar:
-    st.header("🔑 Jira Credentials")
-    # Using 'value' parameter to pre-fill from .env
-    jira_url = st.text_input("Jira Server URL", value=DEFAULT_URL, placeholder="https://your-domain.atlassian.net")
-    email = st.text_input("Email", value=DEFAULT_EMAIL, placeholder="admin@company.com")
-    api_token = st.text_input("API Token", value=DEFAULT_TOKEN, type="password")
-    project_key = st.text_input("Project Key", value=DEFAULT_PROJECT, placeholder="SB")
+    st.header("🔑 Jira Configuration")
     
-    st.divider()
-    st.info("💡 **Tip:** If these fields are pre-filled, the app is reading from your `.env` file successfully.")
+    # Only show input if the variable is NOT found in environment/secrets
+    if not DEFAULT_URL:
+        jira_url = st.text_input("Jira Server URL", placeholder="https://your-domain.atlassian.net")
+    else:
+        jira_url = DEFAULT_URL
+        st.success("✅ Server URL Configured")
 
+    if not DEFAULT_EMAIL:
+        email = st.text_input("Email", placeholder="admin@company.com")
+    else:
+        email = DEFAULT_EMAIL
+        st.success("✅ Email Configured")
+
+    if not DEFAULT_TOKEN:
+        api_token = st.text_input("API Token", type="password")
+    else:
+        api_token = DEFAULT_TOKEN
+        st.success("✅ API Token Configured")
+
+    if not DEFAULT_PROJECT:
+        project_key = st.text_input("Project Key", placeholder="SB")
+    else:
+        project_key = DEFAULT_PROJECT
+        st.success("✅ Project Key Configured")
+
+    st.divider()
+    if st.button("Clear Cache / Log Out"):
+        st.rerun()
+        
 # --- Main UI ---
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 
